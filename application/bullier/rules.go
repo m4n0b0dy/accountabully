@@ -3,6 +3,7 @@ package bullier
 import (
 	"accountabully/application/processes"
 	"github.com/go-vgo/robotgo"
+	"regexp"
 	"strings"
 )
 
@@ -53,6 +54,16 @@ func (r *Rules) CheckActiveWindow() *processes.Process {
 		rLCase := strings.ToLower(rule.Name)
 
 		if strings.Contains(lCase, rLCase) {
+			activeWindowProcess.Action = rule.Action
+			return activeWindowProcess
+		}
+
+		pattern := "(?i)" + rLCase
+		matched, err := regexp.MatchString(pattern, lCase)
+		if err != nil {
+			continue
+		}
+		if matched {
 			activeWindowProcess.Action = rule.Action
 			return activeWindowProcess
 		}
